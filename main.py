@@ -104,10 +104,6 @@ def go(config: DictConfig):
             # NOTE: use the rf_config we just created as the rf_config parameter for the train_random_forest
             # step
 
-            ##################
-            # Implement here #
-            ##################
-
             _ = mlflow.run(
                 "src/train_random_forest",
                 "main",
@@ -122,15 +118,19 @@ def go(config: DictConfig):
                     "output_artifact": "random_forest_export",
                 },
             )
-
-
         if "test_regression_model" in active_steps:
+            _ = mlflow.run(
+                "components/test_regression_model",
+                "main",
+                env_manager="conda",
+                parameters={
+                    "mlflow_model": "random_forest_export:prod",
+                    "test_dataset": "test_data.csv:latest",
+                },
+            )
 
-            ##################
-            # Implement here #
-            ##################
 
-            pass
+                
 
 
 if __name__ == "__main__":
